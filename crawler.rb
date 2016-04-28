@@ -9,15 +9,12 @@ class Crawler
     @root = Node.new(nil, url)
     @seen = {url => true}
     @queue = [@root]
-    @counter = 0
   end
 
   def crawl
-    while @counter < 3
+    while @seen.length < 100 && !@queue.empty?
       node = dequeue
-      puts node.url
-      parse(node)
-      @counter += 1
+      parse(node) unless node.nil?
     end
   end
 
@@ -33,22 +30,25 @@ class Crawler
   end
 
   def parse(node)
-    url = node.url
-    puts url
-    response = HTTParty.get(url)
-    doc = Nokogiri::HTML(response)
-    doc.css('a').each do |link|
-      next if link['href'].nil? ||
-        link['href'][0..1] == '//' ||
-        link['href'][0] == '#'
+    return if node.url.nil?
+    begin
+      url = node.url
+      puts "crawling #{url}"
+      response = HTTParty.get(url)
+      doc = Nokogiri::HTML(response)
+      doc.css('a').take(10).each do |link|
+        next if link['href'].nil? || !link['href'].match(/^\/?[a-zA-Z]+/)
 
-      href = link['href'].chomp('/')
+        href = link['href'].chomp('/')
 
-      if (href[0] == '/')
-        enqueue(node, url + href)
-      else
-        enqueue(node, href)
+        if (href[0] == '/')
+          enqueue(node, url + href)
+        else
+          enqueue(node, href)
+        end
       end
+    rescue
+      return
     end
   end
 end
