@@ -38,7 +38,11 @@ var radios = document.getElementsByName('searchType');
 		}
 	}	
 
-//window.location.href="https://fast-beyond-66023.herokuapp.com/crawl?url=" + document.getElementById('url').value + '&searchType=' + $selectedRadio + '&keyword=' + document.getElementById('keyword').value;
+<!--Passing in additional parameters-->	
+//window.location.href="https://fast-beyond-66023.herokuapp.com/crawl?url=" + document.getElementById('url').value + '&searchType=' 
+//	+ $selectedRadio + '&keyword=' + document.getElementById('keyword').value;
+
+<!--Passing only the URL-->
 window.location.href="https://fast-beyond-66023.herokuapp.com/crawl?url=http://" + document.getElementById('url').value
 }
 </script>
