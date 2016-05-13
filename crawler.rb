@@ -25,29 +25,23 @@ class Crawler
     @queue.unshift(node)
   end
 
-  def dequeue
-    @queue.pop
-  end
-
   def parse(node)
     return if node.url.nil?
     begin
       url = node.url
       puts "crawling #{url}"
       response = HTTParty.get(url)
-      doc = Nokogiri::HTML(response)
-      doc.css('a').take(10).each do |link|
-        next if link['href'].nil? || !link['href'].match(/^\/?[a-zA-Z]+/)
-
-        href = link['href'].chomp('/')
-
-        if (href[0] == '/')
-          enqueue(node, url + href)
+      response.scan(/<a.+?href="(.+?)"/).each do |link|
+        link = link.join('').chomp('/')
+        next if !link.match(/^\/?[a-zA-Z]+/)
+        if (link[0] == '/')
+          enqueue(node, url + link)
         else
-          enqueue(node, href)
+          enqueue(node, link)
         end
       end
-    rescue
+    rescue => e
+      puts e
       return
     end
   end
