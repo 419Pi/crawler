@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset='utf-8'>
+	<title>Easel Demo</title>
+	<script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
+	<script type="text/javascript" src="sample2.json"></script>
+</head>
+<body onload="init();">
+
+		
+	<canvas id="testCanvas" width="1000" height="800"></canvas>
+	<script>	
+		function init() {
+			var links = JSON.parse(sample);
+			
+		    // Create a stage from the canvas tag below
+            var stage = new createjs.Stage("testCanvas");
+			
+			//Call draw tree function
+			if(links[0].children.length > 0){
+				drawTree(0, 1000, 50, 0, links, stage);
+			}
+            
+		}
+		function drawTree(lBoundary, rBoundary, y, idx, newLinks, stage) {
+			var width = rBoundary - lBoundary;
+			//alert("width: " + width);
+			//alert("newLinks.length = " + newLinks.length);
+			var startX = (rBoundary + lBoundary)/2;
+			var startY = y;
+			var numLinks = newLinks[idx].children.length;
+			var linkDivide = (width/(numLinks + 1));
+			var line;
+			var j;
+			var x;
+			//alert("URL: " + newLinks[idx].url);
+			x = lBoundary + linkDivide;
+			//alert("linkDivide: " + linkDivide)
+			//alert("numLinks = " + numLinks);
+			for (j = 0; j < numLinks; j++) {
+				// Get new 'shape' which comes with a 'graphics' property that allows us to draw
+				line = new createjs.Shape();
+				// Add this line shape to the canvas
+				stage.addChild(line);
+				// Set brush stroke style (line thickness) and draw black line
+				line.graphics.setStrokeStyle(1).beginStroke("rgba(0,0,0,1)");
+				// Tell EaselJS where to go to start drawing the line
+				line.graphics.moveTo(startX, startY);
+				//x += linkDivide;
+				y = startY + 50;
+				// Tell EaselJS where to draw the line to
+				//alert("x = " + x + ", y = " + y);
+				line.graphics.lineTo(x, y);
+				// Stop drawing this line
+				line.graphics.endStroke();
+				stage.update();
+				//alert("grandchild links: " + newLinks[idx].children[j].children.length);
+				if(newLinks[idx].children[j].children.length > 0){
+					//alert("Left Boundary = " + j*linkDivide + " right Boundary = " + ((j+2)*linkDivide));
+					drawTree((x-(.5*linkDivide)), (x+(.5*linkDivide)), y, j, newLinks[idx].children, stage);
+				}
+				x += linkDivide;
+				line.graphics.moveTo(startX, startY);
+			}
+			stage.update();
+
+		}
+	</script>
+</body>
+</html>
