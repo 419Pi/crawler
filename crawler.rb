@@ -5,9 +5,10 @@ require_relative('node.rb')
 class Crawler
   attr_reader :visited, :root
 
-  def initialize(url)
+  def initialize(url, keyword)
     @root = Node.new(nil, url)
     @seen = {url => true}
+    @keyword = keyword
     @queue = [@root]
   end
 
@@ -30,7 +31,14 @@ class Crawler
     begin
       url = node.url
       puts "crawling #{url}"
-      response = HTTParty.get(url)
+      response = HTTParty.get(url).force_encoding("ISO-8859-1").encode!("UTF-8")
+      if @keyword
+        if response.match(/(^|\s+)#{@keyword}(\s+|$|[\p{P}\p{S}])/i)
+          node.keyword = true
+          @queue = []
+          return
+        end
+      end
       response.scan(/<a.+?href="(.+?)"/).each do |link|
         link = link.join('').chomp('/')
         next if !link.match(/^\/?[a-zA-Z]+/)
