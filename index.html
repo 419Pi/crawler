@@ -13,6 +13,8 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<script src="assets/js/results.js"></script>
+		<script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
 	</head>
 	<body>
 
@@ -136,19 +138,11 @@
 
 						<!-- Basic EaselJS Functionality-->
 							<script>
-								function init() {
-									var stage = new createjs.Stage("demoCanvas");
-									var circle = new createjs.Shape();
-									circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 50);
-									circle.x = 100;
-									circle.y = 100;
-									stage.addChild(circle);
-									stage.update();
-								}
+								init();
 							</script>
 
 							<div class="easel">
-								<canvas id="demoCanvas" width="500" height="300"></canvas>
+								<canvas id="testCanvas" width="500" height="300"></canvas>
 							</div>
 
 						</div>
