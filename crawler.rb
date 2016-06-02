@@ -1,5 +1,4 @@
 require 'httparty'
-require 'nokogiri'
 require_relative('node.rb')
 
 class Crawler
