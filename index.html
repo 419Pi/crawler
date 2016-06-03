@@ -13,11 +13,9 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-		<script src="assets/js/results.js"></script>
-		<script src="assets/js/zoom.js"></script>
-		<script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
 	</head>
-	<body>
+
+    <body onload="init();">
 
 		<!-- Header -->
 			<div id="header">
@@ -83,77 +81,105 @@
 
                             <!--Citation: http://stackoverflow.com/questions/6997400/css-for-aligning-textbox-and-label,
                                 http://stackoverflow.com/questions/17139883/how-to-line-up-text-and-textboxes-horizontally-->
-							<body onload="draw();">
 							<form method="GET" action="https://fast-beyond-66023.herokuapp.com/crawl?" enctype="multipart/form-data">
                                 <div class="fields">
                                 <label>Choose a Web Page to Start From: </label>
-                                    <span><input type="url" id="url" /></span>
-                                </div>
-
-                                <div class="fields">
+                                    <!--<span><input type="url" id="url" onblur="validateURL()"> -->
+                                    <span><input type="url" id="url"></span>
 								<label> What kind of search? </label>
                                     <span><input type="radio" name="searchType" id="searchType" value="DFS" checked="checked">Depth-First
                                     <input type="radio" name="searchType" id="searchType" value="BFS">Breadth-First
                                     </span>
                                 </div>
 
-                                <div class="fields">
+								<div class="fields">
 								<label>Keyword to Stop On (optional): </label>
                                     <span><input type="text" id="keyword"></span>
                                 </div>
                             </form><br>
+
 								<div class="button">
-									<button class="btn-primary" type="button" onclick=startCrawl()>Begin Crawling!</button>
+                                    <button class="button scrolly" type="button" onclick=startCrawl()>Begin Crawling!</button>
 								</div>
+                            </div>
+                        </section>
 
-								<!-- Citation: http://stackoverflow.com/questions/28597167/how-do-it-have-a-radio-button-pass-data-hidden-from-url -->
-								<script type="text/javascript">
-									function startCrawl() {
-										var radios = document.getElementsByName('searchType');
-
-										for (var i = 0, length = radios.length; i < length; i++) {
-											if (radios[i].checked) {
-												$selectedRadio = radios[i].value
-												break;
-											}
-										}
-
-										<!--Passing in additional parameters-->
-										//window.location.href="https://fast-beyond-66023.herokuapp.com/crawl?url=" + document.getElementById('url').value + '&searchType='
-										//	+ $selectedRadio + '&keyword=' + document.getElementById('keyword').value;
-
-										<!--Passing only the URL-->
-										window.location.href="https://fast-beyond-66023.herokuapp.com/crawl?url=http://" + document.getElementById('url').value
-									}
-								</script>
-						</div>
-					</section>
-
-				<!-- Results -->
-					<section id="results" class="three">
+                <!-- Results -->
+						<section id="results" class="three">
 						<div class="container">
 
 							<header>
 								<h2>Results:</h2>
 							</header>
-							<button onclick="zoom()">Zoom In</button>
+
 						<!-- Basic EaselJS Functionality-->
+							<script>
+								function init() {
+									var stage = new createjs.Stage("demoCanvas");
+									var circle = new createjs.Shape();
+									circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 50);
+									circle.x = 100;
+									circle.y = 100;
+									stage.addChild(circle);
+									stage.update();
+								}
+							</script>
+
 							<div class="easel">
-								<canvas id="testCanvas" width="500" height="300"></canvas>
+								<canvas id="demoCanvas" width="500" height="300"></canvas>
 							</div>
 
 						</div>
 					</section>
-			</div>
 
 		<!-- Footer -->
 			<div id="footer">
 
 				<!-- Revision date -->
 					<ul class="revision">
-						<li>Latest Revision: 5.13.16</li>
+						<li>Latest Revision: 5.20.16</li>
 					</ul>
 			</div>
+
+<!------------------------------- Javascript Scripts ------------------------------->
+                            <!--URL Validation
+                       Citation: http://stackoverflow.com/questions/1303872/trying-to-validate-url-using-javascript
+                       !-->
+                            <script>
+                                function validateURL() {
+                                    var urlregex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
+                                    urlTested = document.getElementById('url').value;
+                                    console.log(urlTested);
+                                    console.log(urlregex.test(urlTested));
+                                    if (urlregex.test(urlTested))
+                                        return true;
+                                    else
+                                        return false;
+                                }
+                            </script>
+
+
+                            <!-- Citation: http://stackoverflow.com/questions/28597167/how-do-it-have-a-radio-button-pass-data-hidden-from-url -->
+                            <script type="text/javascript">
+                                function startCrawl() {
+                                    if (validateURL()) {
+                                        var radios = document.getElementsByName('searchType');
+
+                                        for (var i = 0, length = radios.length; i < length; i++) {
+                                            if (radios[i].checked) {
+                                                $selectedRadio = radios[i].value;
+                                                break;
+                                            }
+                                        }
+                                        <!--Passing in additional parameters-->
+                                        window.location.href="https://fast-beyond-66023.herokuapp.com/crawl?url=" + document.getElementById('url').value + '&type='
+                                        	+ $selectedRadio + '&keyword=' + document.getElementById('keyword').value;
+                                    }
+                                    else {
+                                        console.log("Invalid URL");
+                                    }
+                                }
+                            </script>
 
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
@@ -165,7 +191,6 @@
 			<script src="assets/js/main.js"></script>
             <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
             <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
-
-
-	</body>
+	</div>
+    </body>
 </html>
