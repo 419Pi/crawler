@@ -14,6 +14,7 @@
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 		<script src="assets/js/results.js"></script>
+		<script src="assets/js/zoom.js"></script>
 		<script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
 	</head>
 	<body>
@@ -82,7 +83,7 @@
 
                             <!--Citation: http://stackoverflow.com/questions/6997400/css-for-aligning-textbox-and-label,
                                 http://stackoverflow.com/questions/17139883/how-to-line-up-text-and-textboxes-horizontally-->
-							<body onload="init();">
+							<body onload="draw();">
 							<form method="GET" action="https://fast-beyond-66023.herokuapp.com/crawl?" enctype="multipart/form-data">
                                 <div class="fields">
                                 <label>Choose a Web Page to Start From: </label>
@@ -135,12 +136,8 @@
 							<header>
 								<h2>Results:</h2>
 							</header>
-
+							<button onclick="zoom()">Zoom In</button>
 						<!-- Basic EaselJS Functionality-->
-							<script>
-								init();
-							</script>
-
 							<div class="easel">
 								<canvas id="testCanvas" width="500" height="300"></canvas>
 							</div>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset='utf-8'>
+	<title>Easel Demo</title>
+	<script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
+	<script src="assets/js/results.js"></script>
+	<script src="assets/js/zoom.js"></script>
+</head>
+<body onload="draw();">
+	<p>Zoom In</p>
+	<button onclick="growCanvas();draw();" style="position:fixed; top:70px"">Zoom In</button>
+	<button onclick="shrinkCanvas();draw();" style="position:fixed; top:100px">Zoom Out</button>
+	<canvas id="testCanvas" width="1500" height="1000"></canvas>
+</body>
+</html>
