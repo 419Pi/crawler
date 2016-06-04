@@ -65,6 +65,25 @@
                             <p><h4>This crawler will start on a URL and find all hyperlinks on the site, then
                         will map them for a visual representation.  Pretty neat, huh?</h4></p>
 
+                            <p><h3>So what is a web crawler, anyway?</h3></p>
+
+                            <p>To better explain, let's talk about it in relation to Google.  Google is an enormous search engine
+                            , yet when you perform a search, the results appear instantly.  How is that possible?  Basically, this
+                            happens because web crawlers are constantly helping Google store and update content.</p>
+
+                            <p>As the name implies, a web crawler literally loads a web page and then crawls or reads through the page, much like you
+                            or I would do when we examine a page for whatever information we're looking for.  While we may read over a page and
+                            forget what we saw five minutes later, Google really can't afford to do that; otherwise, it would take forever for a
+                            Google search to return any results!  Google's web crawlers instead 'scrape' web pages for content, and then store it
+                            for near-instant retrieval.</p>
+
+                            <p>This is how most search engines work.  By the time you enter a search into Google, the results have already been scraped
+                            and stored (possibly long before you ever decided to search for whatever you're searching for), and all Google has to do is
+                            retrieve any matching data and return it to you as search results.</p>
+
+                            <p>Group Pi's web crawler project is intended to demonstrate web crawler functionality. We have built our graphic web crawler
+                                by integrating several frameworks (some preexisting, some custom made for this project) into what you see below.</p>
+
 							<footer>
 								<a href="#tryit" class="button scrolly">Try it!</a>
 							</footer>
@@ -76,12 +95,16 @@
 						<div class="container">
 
 							<header>
-								<h4>All we need to get started is a URL, but feel free to specify a search type and a stop keyword.</h4>
+								<h3>All we need to get started is a URL, but feel free to specify a search type and a stop keyword.</h3>
 							</header>
+                            <p>There are a couple of ways to use our web crawler.  At the minimum, it requires a URL.  Beyond that,
+                            you can also specify the type of search you want and can also define a keyword that, if found, will stop
+                            the crawler.  Your results will display in the Results section below.</p>
 
                             <!--Citation: http://stackoverflow.com/questions/6997400/css-for-aligning-textbox-and-label,
                                 http://stackoverflow.com/questions/17139883/how-to-line-up-text-and-textboxes-horizontally-->
-							<form method="GET" action="https://fast-beyond-66023.herokuapp.com/crawl?" enctype="multipart/form-data">
+							<!--<form method="GET" action="https://fast-beyond-66023.herokuapp.com/crawl?" enctype="multipart/form-data"> -->
+                            <form>
                                 <div class="fields">
                                 <label>Choose a Web Page to Start From: </label>
                                     <!--<span><input type="url" id="url" onblur="validateURL()"> -->
@@ -137,7 +160,7 @@
 
 				<!-- Revision date -->
 					<ul class="revision">
-						<li>Latest Revision: 5.20.16</li>
+						<li>Latest Revision: 6.03.16</li>
 					</ul>
 			</div>
 
@@ -171,10 +194,25 @@
                                                 break;
                                             }
                                         }
-                                        <!--Passing in additional parameters-->
-                                        window.location.href="https://fast-beyond-66023.herokuapp.com/crawl?url=" + document.getElementById('url').value + '&type='
-                                        	+ $selectedRadio + '&keyword=' + document.getElementById('keyword').value;
+
+                                        appendData = document.getElementById('url').value + '&type=' + $selectedRadio + '&keyword=' + document.getElementById('keyword').value;
+
+                                        <!--AJAX -->
+                                        $.ajax({
+                                            url: "https://fast-beyond-66023.herokuapp.com/crawl?url=" + appendData,
+                                            type: "GET",
+                                            dataType: "json",
+                                            success: (function (msg) {
+                                                alert("This is AJAX. The returned data is: \n\n" + msg);
+                                            })
+                                        });
                                     }
+
+                                        <!--Passing in additional parameters-->
+
+										//window.location.href="https://fast-beyond-66023.herokuapp.com/crawl?url=" + document.getElementById('url').value + '&type='
+                                        //	+ $selectedRadio + '&keyword=' + document.getElementById('keyword').value;
+
                                     else {
                                         console.log("Invalid URL");
                                     }
@@ -182,6 +220,9 @@
                             </script>
 
 		<!-- Scripts -->
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9/jquery.min.js"></script>
+
+
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/jquery.scrolly.min.js"></script>
 			<script src="assets/js/jquery.scrollzer.min.js"></script>

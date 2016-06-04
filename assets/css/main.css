@@ -658,6 +658,7 @@ input[type="url"]:focus {
 
 	#main {
 		margin-left: 375px;
+		width: auto;
 	}
 
 		#main > section {
