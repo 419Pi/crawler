@@ -15,7 +15,8 @@
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 	</head>
 
-    <body onload="init();">
+    <!-- <body onload="init();"> -->
+	<body>
 
 		<!-- Header -->
 			<div id="header">
@@ -34,7 +35,7 @@
 							<ul>
 								<li><a href="#top" id="top-link" class="skel-layers-ignoreHref"><span class="icon fa-home">Welcome</span></a></li>
 								<li><a href="#tryit" id="tryit-link" class="skel-layers-ignoreHref"><span class="icon fa-th">Try It</span></a></li>
-								<li><a href="#results" id="results-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Results</span></a></li>
+								<li><a href="#results" id="results-link" class="skel-layers-ignoreHref"><span class="icon fa-camera-retro">Results</span></a></li>
 								<li><a href="#contact" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-user">Sources</span></a></li>
 							</ul>
 						</nav>
@@ -139,18 +140,52 @@
                         </section>
 
                 <!-- Results -->
+
+                <!-- Code for status indicator -->
+                <style>
+                    .progress {
+                        height: 100px;
+                    }
+                    .progress > svg {
+                        margin: 0 auto;
+                        height: 100%;
+                        display: block;
+                    }
+                </style>
+
+
+
+                <script src="https://cdn.rawgit.com/kimmobrunfeldt/progressbar.js/0.5.6/dist/progressbar.js"></script>
+
+                <script>
+                //window.onload = function onLoad() {
+                function showStatus() {
+                var circle = new ProgressBar.Circle('#progress', {
+                color: '#FCB03C',
+                duration: 2800,
+                easing: 'easeInOut',
+                });
+                circle.animate(2);
+                };
+                </script>
+
 						<section id="results" class="three">
 						<div class="container">
 
 							<header>
 								<h2>Results:</h2>
 							</header>
+                            <div class="progress" id="progress">
+
+                            </div>
 
 							<canvas id="testCanvas" width="1200" height="800"></canvas>
 							<script>
 								//function init() {
+
                                 function drawResults(results) {
 									var links = JSON.parse(results);
+                                    localStorage.setItem(results);
 
 									// Create a stage from the canvas tag below
 									var stage = new createjs.Stage("testCanvas");
@@ -217,7 +252,15 @@
 										x += linkDivide;
 										line.graphics.moveTo(startX, startY);
 									}
+                                    needStatus == false;
 									stage.update();
+                                    stage.on("stagemousedown", function(evt) {
+                                        // Citation: http://stackoverflow.com/questions/23213788/how-to-pass-variable-value-between-different-html-pages-in-javascript
+                                        // window.open("zoom.html" + '#' + results, '_blank', 'location=yes,scrollbars=yes,status=yes');
+                                        window.open("zoom.html", '_blank', 'location=yes,scrollbars=yes,status=yes');
+
+
+                                    })
 								}
 							</script>
 
@@ -264,6 +307,12 @@
                                             }
                                         }
 
+                                        needStatus = true;
+                                        console.log(needStatus);
+                                        if (needStatus == true) {
+                                            showStatus();
+                                        }
+
                                         appendData = document.getElementById('url').value + '&type=' + $selectedRadio + '&keyword=' + document.getElementById('keyword').value + '&limit=' + document.getElementById('limit').value;
 
                                         <!--AJAX -->
@@ -280,12 +329,11 @@
                                     }
 
                                         <!--Previous implementation, passing request by URL Encoding-->
-
 										//window.location.href="https://fast-beyond-66023.herokuapp.com/crawl?url=" + document.getElementById('url').value + '&type='
                                         //	+ $selectedRadio + '&keyword=' + document.getElementById('keyword').value;
 
                                     else {
-                                        console.log("Invalid URL");
+                                        alert("Invalid URL. The format should be: http://www.google.com");
                                     }
                                 }
                             </script>
