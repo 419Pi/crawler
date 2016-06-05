@@ -67,8 +67,8 @@
 
                             <p><h3>So what is a web crawler, anyway?</h3></p>
 
-                            <p>To better explain, let's talk about it in relation to Google.  Google is an enormous search engine
-                            , yet when you perform a search, the results appear instantly.  How is that possible?  Basically, this
+                            <p>To better explain, let's talk about it in relation to Google.  Google is an enormous search engine,
+                            yet when you perform a search, the results appear instantly.  How is that possible?  Basically, this
                             happens because web crawlers are constantly helping Google store and update content.</p>
 
                             <p>As the name implies, a web crawler literally loads a web page and then crawls or reads through the page, much like you
@@ -78,7 +78,7 @@
                             for near-instant retrieval.</p>
 
                             <p>This is how most search engines work.  By the time you enter a search into Google, the results have already been scraped
-                            and stored (possibly long before you ever decided to search for whatever you're searching for), and all Google has to do is
+                            and stored (probably long before you ever decided to search for whatever you're searching for), and all Google has to do is
                             retrieve any matching data and return it to you as search results.</p>
 
                             <p>Group Pi's web crawler project is intended to demonstrate web crawler functionality. We have built our graphic web crawler
@@ -98,8 +98,14 @@
 								<h3>All we need to get started is a URL, but feel free to specify a search type and a stop keyword.</h3>
 							</header>
                             <p>There are a couple of ways to use our web crawler.  At the minimum, it requires a URL.  Beyond that,
-                            you can also specify the type of search you want and can also define a keyword that, if found, will stop
-                            the crawler.  Your results will display in the Results section below.</p>
+                            you can also specify the type of search you want, define a keyword that, if found, will stop
+                            the crawler, and finally, can choose to limit how many links the crawler will cover before stopping.
+                                Your results will display graphically in the Results section below.</p>
+
+                            <p>So, for example, choosing these inputs {http://www.google.com, Breadth-First, science, 50} would crawl Google's
+                                URL doing a breadth-first search, would stop if the word 'science' was found, and would graph the first 50
+                                links before found before stopping.
+                                </p>
 
                             <!--Citation: http://stackoverflow.com/questions/6997400/css-for-aligning-textbox-and-label,
                                 http://stackoverflow.com/questions/17139883/how-to-line-up-text-and-textboxes-horizontally-->
@@ -119,6 +125,11 @@
 								<label>Keyword to Stop On (optional): </label>
                                     <span><input type="text" id="keyword"></span>
                                 </div>
+
+								<div class="fields">
+									<label>Limit the search to (optional): </label>
+									<span><input type="text" id="limit" placeholder="100"></span>
+								</div>
                             </form><br>
 
 								<div class="button">
@@ -160,7 +171,7 @@
 
 				<!-- Revision date -->
 					<ul class="revision">
-						<li>Latest Revision: 6.03.16</li>
+						<li>Latest Revision: 6.05.16</li>
 					</ul>
 			</div>
 
@@ -195,20 +206,20 @@
                                             }
                                         }
 
-                                        appendData = document.getElementById('url').value + '&type=' + $selectedRadio + '&keyword=' + document.getElementById('keyword').value;
+                                        appendData = document.getElementById('url').value + '&type=' + $selectedRadio + '&keyword=' + document.getElementById('keyword').value + '&limit=' + document.getElementById('limit').value;
 
                                         <!--AJAX -->
                                         $.ajax({
-                                            url: "https://fast-beyond-66023.herokuapp.com/crawl?url=" + appendData,
+											url: "/crawl?url=" + appendData,
                                             type: "GET",
                                             dataType: "json",
-                                            success: (function (msg) {
-                                                alert("This is AJAX. The returned data is: \n\n" + msg);
+                                            success: (function (data) {
+                                                console.log(JSON.stringify(data));
                                             })
                                         });
                                     }
 
-                                        <!--Passing in additional parameters-->
+                                        <!--Previous implementation, passing request by URL Encoding-->
 
 										//window.location.href="https://fast-beyond-66023.herokuapp.com/crawl?url=" + document.getElementById('url').value + '&type='
                                         //	+ $selectedRadio + '&keyword=' + document.getElementById('keyword').value;
@@ -220,7 +231,7 @@
                             </script>
 
 		<!-- Scripts -->
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9/jquery.min.js"></script>
+                <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9/jquery.min.js"></script> -->
 
 
 			<script src="assets/js/jquery.min.js"></script>
