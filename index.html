@@ -36,7 +36,7 @@
 								<li><a href="#top" id="top-link" class="skel-layers-ignoreHref"><span class="icon fa-home">Welcome</span></a></li>
 								<li><a href="#tryit" id="tryit-link" class="skel-layers-ignoreHref"><span class="icon fa-th">Try It</span></a></li>
 								<li><a href="#results" id="results-link" class="skel-layers-ignoreHref"><span class="icon fa-camera-retro">Results</span></a></li>
-								<li><a href="#contact" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-user">Sources</span></a></li>
+								<li><a href="#sources" id="sources-link" class="skel-layers-ignoreHref"><span class="icon fa-user">Further Reading</span></a></li>
 							</ul>
 						</nav>
 
@@ -80,10 +80,13 @@
 
                             <p>This is how most search engines work.  By the time you enter a search into Google, the results have already been scraped
                             and stored (probably long before you ever decided to search for whatever you're searching for), and all Google has to do is
-                            retrieve any matching data and return it to you as search results.</p>
+                            retrieve any matching data and return it to you as search results.  As you can imagine, web-based companies have a vested interest in
+							in making their sites web crawler friendly, which is known as Search Engine Optimization, or SEO.</p>
 
-                            <p>Group Pi's web crawler project is intended to demonstrate web crawler functionality. We have built our graphic web crawler
-                                by integrating several frameworks (some preexisting, some custom made for this project) into what you see below.</p>
+                            <p>Group Pi's web crawler project is intended to demonstrate basic web crawler functionality. Our project will crawl a site and return
+								a graphic representation of all links it finds--in essence, scraping for content, just like production web crawlers do.  We
+								have built our graphic web crawler by integrating several frameworks (some preexisting, some custom made for this project)
+								into what you see below.</p>
 
 							<footer>
 								<a href="#tryit" class="button scrolly">Try it!</a>
@@ -98,14 +101,14 @@
 							<header>
 								<h3>All we need to get started is a URL, but feel free to specify a search type and a stop keyword.</h3>
 							</header>
-                            <p>There are a couple of ways to use our web crawler.  At the minimum, it requires a URL.  Beyond that,
+                            <p>There are several ways to use our web crawler.  At the minimum, it requires a URL.  Beyond that,
                             you can also specify the type of search you want, define a keyword that, if found, will stop
                             the crawler, and finally, can choose to limit how many links the crawler will cover before stopping.
                                 Your results will display graphically in the Results section below.</p>
 
-                            <p>So, for example, choosing these inputs {http://www.google.com, Breadth-First, science, 50} would crawl Google's
-                                URL doing a breadth-first search, would stop if the word 'science' was found, and would graph the first 50
-                                links before found before stopping.
+                            <p>So, for example, choosing these inputs {http://www.google.com, Breadth-First, science, 50} would instruct the crawler to crawl
+								Google's main URL doing a breadth-first search, would stop if the word 'science' was found, and would graph the first 50
+                                links found before stopping.
                                 </p>
 
                             <!--Citation: http://stackoverflow.com/questions/6997400/css-for-aligning-textbox-and-label,
@@ -133,9 +136,9 @@
 								</div>
                             </form><br>
 
-								<div class="button">
-                                    <button class="button scrolly" type="button" onclick=startCrawl()>Begin Crawling!</button>
-								</div>
+                                <div>
+								<a href="#results" class="button scrolly" type="button" onclick=startCrawl()>Begin Crawling!</a>
+                                </div>
                             </div>
                         </section>
 
@@ -169,103 +172,34 @@
                 };
                 </script>
 
-						<section id="results" class="three">
-						<div class="container">
+				<section id="results" class="three">
+				<div class="container">
 
-							<header>
-								<h2>Results:</h2>
-							</header>
-                            <div class="progress" id="progress">
+					<header>
+						<h2>Results:</h2>
+						<h4>Click the graph to zoom in or out.</h4>
+					</header>
+					<!-- Show status bar -->
+					<div class="progress" id="progress"></div>
+					<canvas id="testCanvas" width="1200" height="800"></canvas>
+				</div>
+				</section>
 
-                            </div>
-
-							<canvas id="testCanvas" width="1200" height="800"></canvas>
-							<script>
-								//function init() {
-
-                                function drawResults(results) {
-									var links = JSON.parse(results);
-                                    localStorage.setItem(results);
-
-									// Create a stage from the canvas tag below
-									var stage = new createjs.Stage("testCanvas");
-
-									//Call draw tree function
-									if(links[0].children.length > 0){
-										// Create a label with the first  url
-										label = new createjs.Text(links[0].url, "8px Arial", "#ff7700");
-										stage.addChild(label);
-										// Set the x and y coordinates of the label
-										label.x = 600;
-										label.y = 40;
-										label.textAlign = "center";
-										stage.update();
-										drawTree(0, 1200, 50, 0, links, stage);
-									}
-
-								}
-								function drawTree(lBoundary, rBoundary, y, idx, newLinks, stage) {
-									var width = rBoundary - lBoundary;
-									//alert("width: " + width);
-									//alert("newLinks.length = " + newLinks.length);
-									var startX = (rBoundary + lBoundary)/2;
-									var startY = y;
-									var numLinks = newLinks[idx].children.length;
-									var linkDivide = (width/(numLinks + 1));
-									var line;
-									var j;
-									var x;
-									var label;
-									//alert("URL: " + newLinks[idx].url);
-									x = lBoundary + linkDivide;
-									//alert("linkDivide: " + linkDivide)
-									//alert("numLinks = " + numLinks);
-									for (j = 0; j < numLinks; j++) {
-										// Get new 'shape' which comes with a 'graphics' property that allows us to draw
-										line = new createjs.Shape();
-										// Add this line shape to the canvas
-										stage.addChild(line);
-										// Set brush stroke style (line thickness) and draw black line
-										line.graphics.setStrokeStyle(1).beginStroke("rgba(0,0,0,1)");
-										// Tell EaselJS where to go to start drawing the line
-										line.graphics.moveTo(startX, startY);
-										y = startY + 50;
-										// Tell EaselJS where to draw the line to
-										//alert("x = " + x + ", y = " + y);
-										line.graphics.lineTo(x, y-10);
-										// Stop drawing this line
-										line.graphics.endStroke();
-
-										// Create a label with the url of the link
-										label = new createjs.Text(newLinks[idx].children[j].url, "8px Arial", "#ff7700");
-										stage.addChild(label);
-										// Set the x and y coordinates of the label
-										label.x = x;
-										label.y = y-10;
-										label.textAlign = "center";
-										stage.update();
-										//alert("grandchild links: " + newLinks[idx].children[j].children.length);
-										if(newLinks[idx].children[j].children.length > 0){
-											//alert("Left Boundary = " + j*linkDivide + " right Boundary = " + ((j+2)*linkDivide));
-											drawTree((x-(.5*linkDivide)), (x+(.5*linkDivide)), y, j, newLinks[idx].children, stage);
-										}
-										x += linkDivide;
-										line.graphics.moveTo(startX, startY);
-									}
-                                    needStatus == false;
-									stage.update();
-                                    stage.on("stagemousedown", function(evt) {
-                                        // Citation: http://stackoverflow.com/questions/23213788/how-to-pass-variable-value-between-different-html-pages-in-javascript
-                                        // window.open("zoom.html" + '#' + results, '_blank', 'location=yes,scrollbars=yes,status=yes');
-                                        window.open("zoom.html", '_blank', 'location=yes,scrollbars=yes,status=yes');
-
-
-                                    })
-								}
-							</script>
-
-						</div>
-					</section>
+				<!-- Further Reading -->
+				<section id="sources" class="four">
+					<div class="container">
+						<header>
+							<h4>Further Reading:</h4>
+						</header>
+						<ul>
+							<li><a href="https://www.google.com/insidesearch/howsearchworks/crawling-indexing.html">Google's Documentation on Web Crawlers</a></li>
+							<li><a href="https://varvy.com/googlebot.html">A Brief Introduction to Googlebot</a></li>
+							<li><a href="http://static.googleusercontent.com/media/www.google.com/en//webmasters/docs/search-engine-optimization-starter-guide.pdf">Google's Starter Guide to Search Engine Optimization (SEO)</a></li>
+							<li><a href="http://searchengineland.com/guide/what-is-seo">Periodic Table of SEO Success Factors</a></li>
+							<li><a href="https://moz.com/beginners-guide-to-seo">A Beginner's Guide to SEO</a></li>
+						</ul>
+					</div>
+				</section>
 
 		<!-- Footer -->
 			<div id="footer">
@@ -276,16 +210,16 @@
 					</ul>
 			</div>
 
-<!------------------------------- Javascript Scripts ------------------------------->
-                            <!--URL Validation
-                       Citation: http://stackoverflow.com/questions/1303872/trying-to-validate-url-using-javascript
-                       !-->
+<!------------------------------- Form Validation ------------------------------->
+                <!--URL Validation
+                Citation: http://stackoverflow.com/questions/1303872/trying-to-validate-url-using-javascript
+                !-->
                             <script>
                                 function validateURL() {
                                     var urlregex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
                                     urlTested = document.getElementById('url').value;
                                     console.log(urlTested);
-                                    console.log(urlregex.test(urlTested));
+                                    //console.log(urlregex.test(urlTested));
                                     if (urlregex.test(urlTested))
                                         return true;
                                     else
@@ -308,7 +242,6 @@
                                         }
 
                                         needStatus = true;
-                                        console.log(needStatus);
                                         if (needStatus == true) {
                                             showStatus();
                                         }
@@ -337,6 +270,88 @@
                                     }
                                 }
                             </script>
+
+				<!------------------------------- EaselJS Functionality ------------------------------->
+				<script>
+					//function init() {
+					function drawResults(results) {
+						var links = JSON.parse(results);
+
+						// Create a stage from the canvas tag below
+						var stage = new createjs.Stage("testCanvas");
+
+						stage.on("stagemousedown", function(event) {
+							// Citation: http://stackoverflow.com/questions/87359/can-i-pass-a-javascript-variable-to-another-browser-window/87737#87737
+							var w = window.open("zoom.html", '_blank', 'scrollbars=yes,status=no, width=1800,height=450');
+							w.results = results;
+						});
+
+						//Call draw tree function
+						if(links[0].children.length > 0){
+							// Create a label with the first  url
+							label = new createjs.Text(links[0].url, "8px Arial", "#ff7700");
+							stage.addChild(label);
+							// Set the x and y coordinates of the label
+							label.x = 600;
+							label.y = 40;
+							label.textAlign = "center";
+							stage.update();
+							drawTree(0, 1200, 50, 0, links, stage);
+						}
+
+					}
+					function drawTree(lBoundary, rBoundary, y, idx, newLinks, stage) {
+						var width = rBoundary - lBoundary;
+						//alert("width: " + width);
+						//alert("newLinks.length = " + newLinks.length);
+						var startX = (rBoundary + lBoundary)/2;
+						var startY = y;
+						var numLinks = newLinks[idx].children.length;
+						var linkDivide = (width/(numLinks + 1));
+						var line;
+						var j;
+						var x;
+						var label;
+						//alert("URL: " + newLinks[idx].url);
+						x = lBoundary + linkDivide;
+						//alert("linkDivide: " + linkDivide)
+						//alert("numLinks = " + numLinks);
+						for (j = 0; j < numLinks; j++) {
+							// Get new 'shape' which comes with a 'graphics' property that allows us to draw
+							line = new createjs.Shape();
+							// Add this line shape to the canvas
+							stage.addChild(line);
+							// Set brush stroke style (line thickness) and draw black line
+							line.graphics.setStrokeStyle(1).beginStroke("rgba(0,0,0,1)");
+							// Tell EaselJS where to go to start drawing the line
+							line.graphics.moveTo(startX, startY);
+							y = startY + 50;
+							// Tell EaselJS where to draw the line to
+							//alert("x = " + x + ", y = " + y);
+							line.graphics.lineTo(x, y-10);
+							// Stop drawing this line
+							line.graphics.endStroke();
+
+							// Create a label with the url of the link
+							label = new createjs.Text(newLinks[idx].children[j].url, "8px Arial", "#ff7700");
+							stage.addChild(label);
+							// Set the x and y coordinates of the label
+							label.x = x;
+							label.y = y-10;
+							label.textAlign = "center";
+							stage.update();
+							//alert("grandchild links: " + newLinks[idx].children[j].children.length);
+							if(newLinks[idx].children[j].children.length > 0){
+								//alert("Left Boundary = " + j*linkDivide + " right Boundary = " + ((j+2)*linkDivide));
+								drawTree((x-(.5*linkDivide)), (x+(.5*linkDivide)), y, j, newLinks[idx].children, stage);
+							}
+							x += linkDivide;
+							line.graphics.moveTo(startX, startY);
+						}
+						needStatus == false;
+						stage.update();
+					}
+				</script>
 
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
