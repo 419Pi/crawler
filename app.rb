@@ -9,12 +9,18 @@ end
 get '/crawl' do
   url = params['url']
   type = params['type']
-  if type == 'BFS'
-    crawler = DFS_Crawler.new(url)
-  elsif type == 'DFS'
-    crawler = BFS_Crawler.new(url)
+  keyword = params['keyword']
+  if params['limit'] != ''
+    limit = params['limit']
   else
-      return "Type not recognized"
+    limit = 100
+  end
+  if type == 'BFS'
+    crawler = DFS_Crawler.new(url, limit, keyword)
+  elsif type == 'DFS'
+    crawler = BFS_Crawler.new(url, limit, keyword)
+  else
+    return "Type not recognized"
   end
   crawler.crawl
   crawler.root.to_json
