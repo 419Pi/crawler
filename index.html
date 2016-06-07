@@ -247,6 +247,7 @@
                                         }
 
                                         appendData = document.getElementById('url').value + '&type=' + $selectedRadio + '&keyword=' + document.getElementById('keyword').value + '&limit=' + document.getElementById('limit').value;
+										console.log(appendData);
 
                                         <!--AJAX -->
                                         $.ajax({
@@ -254,6 +255,7 @@
                                             type: "GET",
                                             dataType: "json",
                                             success: (function (data) {
+												console.log("This was the URL passed:" + url.value);
                                                 results = '[' + (JSON.stringify(data)) + ']';
                                                 console.log(results);
                                                 drawResults(results);
