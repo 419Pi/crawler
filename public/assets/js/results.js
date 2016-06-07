@@ -10,6 +10,7 @@ function draw() {
 	var label;
 	// Create a stage from the canvas tag below
 	var stage = new createjs.Stage("testCanvas");
+	stage.enableMouseOver(5)
 	var oldCanvas = document.getElementById("testCanvas");
 	//Call draw tree function
 	if(links[0].children.length > 0){
@@ -60,14 +61,26 @@ function drawTree(lBoundary, rBoundary, y, idx, newLinks, stage) {
 		line.graphics.lineTo(x, y-10);
 		// Stop drawing this line
 		line.graphics.endStroke();
-	
-		// Create a label with the url of the link
-		label = new createjs.Text(newLinks[idx].children[j].url, font, "#ff7700");
-		stage.addChild(label);
-		// Set the x and y coordinates of the label
-		label.x = x;
-		label.y = y-10;
-		label.textAlign = "center";
+		circle = new createjs.Shape();//createjs.Text(newLinks[idx].children[j].url, "8px Arial", "#ff7700");
+				circle.graphics.beginFill("#ff7700").drawCircle(0, 0, 10);
+				// Set the x and y coordinates of the label
+				circle.x = x;
+				circle.y = y-10
+				function setAlertVal () {
+					var alertVal = newLinks[idx].children[j].url
+					circle.on("mouseover", function() {
+					//alert(alertVal);
+						swal({   
+							title: alertVal, 
+							//type: "info",   
+							showConfirmButton: false,
+							allowOutsideClick: true,
+							animation: false,
+							timer:1500});
+					});
+				}
+				setAlertVal ()
+				stage.addChild(circle);
 		stage.update();
 		//alert("grandchild links: " + newLinks[idx].children[j].children.length);
 		if(newLinks[idx].children[j].children.length > 0){
